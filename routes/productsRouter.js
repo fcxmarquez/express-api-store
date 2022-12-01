@@ -1,14 +1,20 @@
 const express = require('express');
-const ProductsService = require('../services/products.service');
+const ProductsService = require('../services/product.service');
 const router = express.Router();
 
 const productService = new ProductsService();
 
 // GET
 
-router.get('/', (req, res) => {
-  const products = productService.find()
+router.get('/', async (req, res) => {
+  const products = await productService.find();
   res.json(products);
+});
+
+router.get('/:productId', async (req, res) => {
+  const { productId } = req.params;
+  const product = await productService.findOne(productId);
+  res.json(product);
 });
 
 // All the specific routes has be before that the dynamic routes
@@ -17,21 +23,29 @@ router.get('/filter', (req, res) => {
 });
 
 // POST
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
-  res.status(201).json({ message: 'created', data: body });
+  const newProduct = await productService.create(body);
+  res.status(201).json(newProduct);
 });
 
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-
-  res.json({ message: 'updated', data: body, id });
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const product = await productService.update(id, body);
+    res.json(product);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message,
+    });
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  res.json({ message: 'deleted', id });
+  const product = await productService.delete(id);
+  res.json(product);
 });
 
 module.exports = router;
