@@ -11,10 +11,14 @@ router.get('/', async (req, res) => {
   res.json(products);
 });
 
-router.get('/:productId', async (req, res) => {
-  const { productId } = req.params;
-  const product = await productService.findOne(productId);
-  res.json(product);
+router.get('/:productId', async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const product = await productService.findOne(productId);
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // All the specific routes has be before that the dynamic routes
