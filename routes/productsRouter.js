@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
   res.json(products);
 });
 
+// To use an error middleware, we have to use try catch
 router.get('/:productId', async (req, res, next) => {
   try {
     const { productId } = req.params;
@@ -33,16 +34,14 @@ router.post('/', async (req, res) => {
   res.status(201).json(newProduct);
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const body = req.body;
     const product = await productService.update(id, body);
     res.json(product);
   } catch (error) {
-    res.status(404).json({
-      message: error.message,
-    });
+    next(error);
   }
 });
 
