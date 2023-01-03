@@ -1,9 +1,13 @@
-function logErrors(err, req, res, next) {
-  next(err);
+function logGenericErrors(err, req, res, next) {
+  res.status(500).json({ message: err.message, stack: err.stack });
 }
 
-function errorHandler(err, req, res, next) {
-  res.status(500).json({ message: err.message, stack: err.stack });
+function queryErrorHandler(err, req, res, next) {
+  if (err.parent.message) {
+    const { message } = err.errors[0];
+    res.status(409).json({ message });
+  }
+  next(err);
 }
 
 function boomErrorHandler(err, req, res, next) {
@@ -11,7 +15,7 @@ function boomErrorHandler(err, req, res, next) {
     const { output } = err;
     res.status(output.statusCode).json(output.payload);
   }
-  next(err)
+  next(err);
 }
 
-module.exports = { logErrors, errorHandler, boomErrorHandler };
+module.exports = { logGenericErrors, boomErrorHandler, queryErrorHandler };

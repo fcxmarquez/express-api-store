@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes');
 const app = express();
-const { logErrors, boomErrorHandler } = require('./middlewares/error.handler');
+const { logGenericErrors, boomErrorHandler, queryErrorHandler } = require('./middlewares/error.handler');
 
 const port = process.env.PORT || 3000;
 
@@ -29,8 +29,9 @@ app.get('/', (req, res) => {
 routerApi(app);
 
 // The order of the middlewares is important
-app.use(logErrors);
 app.use(boomErrorHandler);
+app.use(queryErrorHandler)
+app.use(logGenericErrors);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
