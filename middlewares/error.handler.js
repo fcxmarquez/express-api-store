@@ -1,11 +1,14 @@
+const { ValidationError } = require('sequelize');
+
 function logGenericErrors(err, req, res, next) {
   res.status(500).json({ message: err.message, stack: err.stack });
 }
 
-function queryErrorHandler(err, req, res, next) {
-  if (err.parent.message) {
-    const { message } = err.errors[0];
-    res.status(409).json({ message });
+function ormErrorHandler(err, req, res, next) {
+  if (err instanceof ValidationError) {
+    res
+      .status(409)
+      .json({ statusCode: 409, message: err.name, errors: err.errors });
   }
   next(err);
 }
@@ -18,4 +21,4 @@ function boomErrorHandler(err, req, res, next) {
   next(err);
 }
 
-module.exports = { logGenericErrors, boomErrorHandler, queryErrorHandler };
+module.exports = { logGenericErrors, boomErrorHandler, ormErrorHandler };

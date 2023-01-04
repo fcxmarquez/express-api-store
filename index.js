@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes');
 const app = express();
-const { logGenericErrors, boomErrorHandler, queryErrorHandler } = require('./middlewares/error.handler');
+const { logGenericErrors, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
 
 const port = process.env.PORT || 3000;
 
@@ -30,7 +30,7 @@ routerApi(app);
 
 // The order of the middlewares is important
 app.use(boomErrorHandler);
-app.use(queryErrorHandler)
+app.use(ormErrorHandler)
 app.use(logGenericErrors);
 
 app.listen(port, () => {
