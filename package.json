@@ -10,7 +10,7 @@
     "migrations:generate": "sequelize-cli migration:generate --name",
     "migrations:run": "sequelize-cli db:migrate",
     "migrations:revert": "sequelize-cli db:migrate:undo",
-    "migrations:delete" : "sequelize-cli migration:undo:all"
+    "migrations:delete": "sequelize-cli migration:undo:all"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "sequelize-cli": "^6.5.2"
   },
   "dependencies": {
+    "@appland/appmap-agent-js": "^12.2.0",
     "@hapi/boom": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

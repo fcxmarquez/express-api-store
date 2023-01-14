@@ -1,0 +1,11 @@
+name: express-api-store
+packages:
+  - path: config
+  - path: db
+  - path: libs
+  - path: middlewares
+  - path: routes
+  - path: schemas
+  - path: services
+language: javascript
+appmap_dir: tmp/appmap
