@@ -27,6 +27,17 @@ const OrderSchema = {
     defaultValue: Sequelize.NOW,
     field: 'created_at',
   },
+  total: {
+    type: DataTypes.VIRTUAL, // Is virtual because it is not stored in the database
+    get() {
+      if (this.items && this.items.length > 0) {
+        return this.items.reduce(
+          (total, item) => total + item.price * item.OrderProduct.amount,
+          0
+        );
+      }
+    },
+  },
 };
 
 class Order extends Model {
@@ -35,6 +46,7 @@ class Order extends Model {
       as: 'customer',
     });
     this.belongsToMany(models.Product, {
+      as: 'items',
       through: models.OrderProduct,
       foreignKey: 'orderId',
       otherKey: 'productId',

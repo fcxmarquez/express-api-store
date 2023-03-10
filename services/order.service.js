@@ -16,10 +16,13 @@ class OrderService {
   async findOne(id) {
     // The relations can be nested as deep as you want
     const order = await models.Order.findByPk(id, {
-      include: [{
-        association: 'customer',
-        include: ['user'],
-      }],
+      include: [
+        {
+          association: 'customer',
+          include: ['user'],
+        },
+        'items',
+      ],
     });
     return order;
   }
@@ -28,6 +31,11 @@ class OrderService {
     const deleted = await this.findOne(id);
     const response = await deleted.destroy();
     return response;
+  }
+
+  async addItem(data) {
+    const newItem = await models.OrderProduct.create(data);
+    return newItem;
   }
 }
 
