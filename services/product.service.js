@@ -10,9 +10,16 @@ class ProductsService {
     return newProduct;
   }
 
-  async find() {
-    const response = await models.Product.findAll({
+  async find(query) {
+    const { limit, offset } = query;
+    const options = {
       include: ['category'],
+      limit: limit || 10,
+      offset,
+    };
+
+    const response = await models.Product.findAll({
+      ...options,
     });
 
     return response;
@@ -36,14 +43,14 @@ class ProductsService {
     const product = await this.findOne(id);
     const response = await product.update(data);
 
-    return response
+    return response;
   }
 
   async delete(id) {
     const product = await this.findOne(id);
     const response = await product.destroy();
 
-    return response
+    return response;
   }
 }
 

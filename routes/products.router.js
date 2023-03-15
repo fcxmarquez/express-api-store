@@ -5,6 +5,7 @@ const {
   createProductSchema,
   updateProductSchema,
   getProductSchema,
+  queryProductSchema,
 } = require('../schemas/product.schema');
 const router = express.Router();
 
@@ -12,10 +13,18 @@ const productService = new ProductsService();
 
 // GET
 
-router.get('/', async (req, res) => {
-  const products = await productService.find();
-  res.json(products);
-});
+router.get(
+  '/',
+  validatorHandler(queryProductSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const products = await productService.find(req.query);
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // To use an error middleware, we have to use try catch
 router.get(
