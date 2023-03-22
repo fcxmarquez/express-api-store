@@ -9,6 +9,7 @@ const categoryId = Joi.number().integer();
 
 const limit = Joi.number().integer().min(1).max(100);
 const offset = Joi.number().integer().min(0);
+const page = Joi.number().integer().min(1);
 
 const createProductSchema = Joi.object({
   name: name.required(),
@@ -32,6 +33,12 @@ const getProductSchema = Joi.object({
 const queryProductSchema = Joi.object({
   limit: limit.default(10),
   offset: offset.default(0),
+  page: page,
 });
 
-module.exports = { createProductSchema, updateProductSchema, getProductSchema, queryProductSchema };
+module.exports = {
+  createProductSchema,
+  updateProductSchema,
+  getProductSchema,
+  queryProductSchema,
+};

@@ -8,6 +8,7 @@ const {
   queryProductSchema,
 } = require('../schemas/product.schema');
 const router = express.Router();
+const { models } = require('../libs/sequelize');
 
 const productService = new ProductsService();
 
@@ -18,8 +19,9 @@ router.get(
   validatorHandler(queryProductSchema, 'query'),
   async (req, res, next) => {
     try {
-      const products = await productService.find(req.query);
-      res.json(products);
+      const response = await productService.find(req);
+
+      res.json(response);
     } catch (error) {
       next(error);
     }
