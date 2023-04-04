@@ -1,4 +1,5 @@
 const boom = require('@hapi/boom');
+const { Op } = require('sequelize');
 const { models } = require('../libs/sequelize');
 
 class ProductsService {
@@ -14,6 +15,9 @@ class ProductsService {
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const offset = (page - 1) * limit;
+    const price = req.query.price || null;
+    const price_min = req.query.price_min || null;
+    const price_max = req.query.price_max || price_min + 100000000;
 
     const totalProducts = await models.Product.count();
     const totalPages = Math.ceil(totalProducts / limit);
@@ -33,20 +37,36 @@ class ProductsService {
           }`
         : null;
 
+    const where = {};
+    if (price !== null) {
+      where.price = price;
+    }
+
+    if (price_min !== null) {
+      where.price = {
+        [Op.between]: [price_min, price_max],
+      };
+    }
+
     const products = await models.Product.findAll({
       limit,
-      offset,
+      offset: where ? null : offset,
+      where,
     });
 
+    const info = {
+      count: totalProducts,
+      pages: totalPages,
+      next: next,
+      prev: prev,
+    };
+
     const response = {
-      info: {
-        count: totalProducts,
-        pages: totalPages,
-        next: next,
-        prev: prev,
-      },
+      info: undefined,
       results: products,
     };
+
+    if (!Object.keys(where).length > 0) response.info = info;
 
     return response;
   }
