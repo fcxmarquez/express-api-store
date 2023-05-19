@@ -15,8 +15,4 @@ module.exports = {
       type: DataTypes.INTEGER,
     }); // We need to add the references again because the changeColumn method removes them
   },
-
-  async down(queryInterface) {
-    //await queryInterface.dropTable(CUSTOMER_TABLE);
-  },
 };
