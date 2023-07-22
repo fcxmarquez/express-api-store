@@ -17,7 +17,7 @@ class ProductsService {
     const offset = (page - 1) * limit;
     const price = req.query.price || null;
     const price_min = req.query.price_min || null;
-    const price_max = req.query.price_max || price_min + 100000000;
+    const price_max = req.query.price_max || price_min + 1000000;
 
     const totalProducts = await models.Product.count();
     const totalPages = Math.ceil(totalProducts / limit);
@@ -41,7 +41,6 @@ class ProductsService {
     if (price !== null) {
       where.price = price;
     }
-
     if (price_min !== null) {
       where.price = {
         [Op.between]: [price_min, price_max],
@@ -52,6 +51,7 @@ class ProductsService {
       limit,
       offset: where ? null : offset,
       where,
+      order: [['id', 'ASC']],
     });
 
     const info = {

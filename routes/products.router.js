@@ -8,7 +8,6 @@ const {
   queryProductSchema,
 } = require('../schemas/product.schema');
 const router = express.Router();
-const { models } = require('../libs/sequelize');
 
 const productService = new ProductsService();
 
@@ -64,14 +63,14 @@ router.post(
 );
 
 router.put(
-  '/:id',
+  '/:productId',
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const { productId } = req.params;
       const body = req.body;
-      const product = await productService.update(id, body);
+      const product = await productService.update(productId, body);
       res.json(product);
     } catch (error) {
       next(error);
@@ -80,14 +79,14 @@ router.put(
 );
 
 router.patch(
-  '/:id',
+  '/:productId',
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const { productId } = req.params;
       const body = req.body;
-      const product = await productService.update(id, body);
+      const product = await productService.update(productId, body);
       res.json(product);
     } catch (error) {
       next(error);
@@ -96,12 +95,12 @@ router.patch(
 );
 
 router.delete(
-  '/:id',
+  '/:productId',
   validatorHandler(getProductSchema, 'params'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const product = await productService.delete(id);
+      const { productId } = req.params;
+      const product = await productService.delete(productId);
       res.json(product);
     } catch (error) {
       next(error);
