@@ -2,7 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes');
 const app = express();
-const { logGenericErrors, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
+const {
+  logGenericErrors,
+  boomErrorHandler,
+  ormErrorHandler,
+} = require('./middlewares/error.handler');
+const { checkApiKey } = require('./middlewares/auth.handler');
 
 const port = process.env.PORT || 3000;
 
@@ -17,8 +22,8 @@ const options = {
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
-}
+  },
+};
 
 app.use(cors(options));
 
@@ -26,11 +31,15 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/new-route', checkApiKey, (req, res) => {
+  res.send('Hello World!');
+});
+
 routerApi(app);
 
 // The order of the middlewares is important
 app.use(boomErrorHandler);
-app.use(ormErrorHandler)
+app.use(ormErrorHandler);
 app.use(logGenericErrors);
 
 app.listen(port, () => {
