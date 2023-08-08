@@ -21,7 +21,7 @@ const UserSchema = {
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: 'customer'
+    defaultValue: 'customer',
   },
   createdAt: {
     allowNull: false,
@@ -42,6 +42,9 @@ class User extends Model {
       tableName: USER_TABLE,
       modelName: 'User',
       timestamps: false,
+      defaultScope: {
+        order: [['id', 'ASC']],
+      },
     };
   }
 }

@@ -23,7 +23,7 @@ const OrderProductSchema = {
   },
   orderId: {
     field: 'order_id',
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.INTEGER,
     references: {
       model: ORDER_TABLE,
@@ -34,14 +34,14 @@ const OrderProductSchema = {
   },
   productId: {
     field: 'product_id',
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.INTEGER,
     references: {
       model: PRODUCT_TABLE,
       key: 'id',
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
+    onDelete: 'SET ',
   },
 };
 
