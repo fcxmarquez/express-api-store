@@ -18,6 +18,7 @@ class UserService {
   async find() {
     const response = await models.User.findAll({
       include: ['customer'],
+      attributes: { exclude: ['password'] },
     });
     return response;
   }
@@ -27,6 +28,8 @@ class UserService {
     if (!user) {
       throw boom.notFound('User not found');
     }
+
+    delete user.dataValues.password;
     return user;
   }
 
