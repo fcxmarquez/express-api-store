@@ -27,6 +27,8 @@ const options = {
 
 app.use(cors(options));
 
+require('./utils/auth'); // load passport strategies
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
