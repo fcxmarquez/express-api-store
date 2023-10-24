@@ -7,7 +7,7 @@ const service = new UserService();
 
 const LocalStrategy = new Strategy(
   {
-    usernameField: 'email',
+    usernameField: 'email', // With this we can use the email field as username, it's a way to change the default usernameField to another name like email
   },
   async (username, password, done) => {
     try {
