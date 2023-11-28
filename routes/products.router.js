@@ -7,6 +7,7 @@ const {
   getProductSchema,
   queryProductSchema,
 } = require('../schemas/product.schema');
+const passport = require('passport');
 const router = express.Router();
 
 const productService = new ProductsService();
@@ -50,6 +51,7 @@ router.get('/filter', (req, res) => {
 // POST
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -64,6 +66,7 @@ router.post(
 
 router.put(
   '/:productId',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
@@ -80,6 +83,7 @@ router.put(
 
 router.patch(
   '/:productId',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
@@ -96,6 +100,7 @@ router.patch(
 
 router.delete(
   '/:productId',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getProductSchema, 'params'),
   async (req, res, next) => {
     try {
