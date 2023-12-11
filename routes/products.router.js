@@ -9,7 +9,7 @@ const {
 } = require('../schemas/product.schema');
 const passport = require('passport');
 const router = express.Router();
-
+const { checkRoles } = require('../middlewares/auth.handler');
 const productService = new ProductsService();
 
 // GET
@@ -52,6 +52,7 @@ router.get('/filter', (req, res) => {
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['supplier']),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -67,6 +68,7 @@ router.post(
 router.put(
   '/:productId',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['supplier']),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
@@ -84,6 +86,7 @@ router.put(
 router.patch(
   '/:productId',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['supplier']),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
@@ -101,6 +104,7 @@ router.patch(
 router.delete(
   '/:productId',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['supplier']),
   validatorHandler(getProductSchema, 'params'),
   async (req, res, next) => {
     try {
