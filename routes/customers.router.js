@@ -40,7 +40,6 @@ router.get(
 
 router.post(
   '/',
-  passport.authenticate('jwt', { session: false }),
   validatorHandler(createCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
