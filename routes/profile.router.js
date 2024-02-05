@@ -9,13 +9,21 @@ const router = express.Router();
 router.get(
   '/my-orders',
   passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
+  async (req, res, next) => {
     try {
+      const user = req.user;
 
+      if (!user.customerId) {
+        res.json([]);
+        return;
+      }
+      const orders = await service.findByUser(user.customerId);
 
-      res.send('my-orders');
+      res.json(orders);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 );
+
+module.exports = router;

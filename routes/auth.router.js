@@ -14,11 +14,12 @@ router.post(
       const payload = {
         sub: user.id,
         role: user.role,
+        customerId: user.customer ? user.customer.id : null,
       };
       const token = jwt.sign(payload, config.jwtSecret);
       res.json({
-        user,
-        token
+        payload,
+        token,
       });
     } catch (error) {
       next(error);

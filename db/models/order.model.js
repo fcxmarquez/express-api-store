@@ -12,7 +12,7 @@ const OrderSchema = {
   },
   customerId: {
     field: 'customer_id',
-    allowNull: true,
+    allowNull: true, // has to be false, and then maybe make a migration
     type: DataTypes.INTEGER,
     references: {
       model: CUSTOMER_TABLE,

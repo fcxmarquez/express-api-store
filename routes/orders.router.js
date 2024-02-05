@@ -2,11 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const OrderService = require('../services/order.service');
 const validatorHandler = require('../middlewares/validator.handler');
-const {
-  createOrderSchema,
-  getOrderSchema,
-  addItemSchema,
-} = require('../schemas/order.schema');
+const { getOrderSchema, addItemSchema } = require('../schemas/order.schema');
+const { checkRoles } = require('../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new OrderService();
@@ -14,6 +11,7 @@ const service = new OrderService();
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['admin']),
   async (req, res, next) => {
     try {
       const orders = await service.find();
@@ -27,6 +25,7 @@ router.get(
 router.get(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['admin']),
   validatorHandler(getOrderSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -42,11 +41,10 @@ router.get(
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  validatorHandler(createOrderSchema, 'body'),
   async (req, res, next) => {
     try {
-      const body = req.body;
-      const newOrder = await service.create(body);
+      const user = req.user;
+      const newOrder = await service.create({ customerId: user.sub });
       res.status(201).json(newOrder);
     } catch (error) {
       next(error);
@@ -72,6 +70,7 @@ router.post(
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+  checkRoles(['admin']),
   validatorHandler(getOrderSchema, 'params'),
   async (req, res, next) => {
     try {

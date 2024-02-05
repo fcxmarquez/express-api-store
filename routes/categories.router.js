@@ -7,7 +7,6 @@ const {
   updateCategorySchema,
   getCategorySchema,
 } = require('../schemas/category.schema');
-const { checkApiKey } = require('../middlewares/auth.handler');
 const router = express.Router();
 const service = new CategoryService();
 const { checkRoles } = require('../middlewares/auth.handler');
