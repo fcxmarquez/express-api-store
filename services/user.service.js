@@ -1,6 +1,6 @@
-const boom = require('@hapi/boom');
-const { models } = require('../libs/sequelize');
-const bcrypt = require('bcrypt');
+const boom = require("@hapi/boom");
+const bcrypt = require("bcrypt");
+const { models } = require("../libs/sequelize");
 
 class UserService {
   constructor() {}
@@ -17,8 +17,8 @@ class UserService {
 
   async find() {
     const response = await models.User.findAll({
-      include: ['customer'],
-      attributes: { exclude: ['password'] },
+      include: ["customer"],
+      attributes: { exclude: ["password"] },
     });
     return response;
   }
@@ -26,7 +26,7 @@ class UserService {
   async findByEmail(email) {
     const response = await models.User.findOne({
       where: { email },
-      include: ['customer'],
+      include: ["customer"],
     });
 
     return response;
@@ -35,7 +35,7 @@ class UserService {
   async findOne(id) {
     const user = await models.User.findByPk(id);
     if (!user) {
-      throw boom.notFound('User not found');
+      throw boom.notFound("User not found");
     }
 
     delete user.dataValues.password;
@@ -51,7 +51,7 @@ class UserService {
   async delete(id) {
     const user = await this.findOne(id);
     if (!user) {
-      throw boom.notFound('User not found');
+      throw boom.notFound("User not found");
     }
 
     const response = await user.destroy();

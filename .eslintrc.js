@@ -4,23 +4,26 @@ module.exports = {
     commonjs: true,
     es2021: true,
   },
-  extends: 'airbnb-base',
+  extends: ["airbnb-base", "plugin:prettier/recommended"],
   overrides: [
     {
       env: {
         node: true,
       },
-      files: [
-        '.eslintrc.{js,cjs}',
-      ],
+      files: [".eslintrc.{js,cjs}"],
       parserOptions: {
-        sourceType: 'script',
+        sourceType: "script",
       },
     },
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaVersion: "latest",
   },
   rules: {
+    "no-shadow": "off",
+    camelcase: "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": "off",
+    "class-methods-use-this": "off",
   },
 };

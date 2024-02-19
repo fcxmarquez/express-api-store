@@ -1,11 +1,10 @@
-'use strict';
-const { DataTypes, Sequelize } = require('sequelize');
-const { USER_TABLE } = require('./../models/user.model');
-const { CUSTOMER_TABLE } = require('./../models/customer.model');
-const { CATEGORY_TABLE } = require('./../models/category.model');
-const { PRODUCT_TABLE } = require('../models/product.model');
-const { ORDER_TABLE } = require('../models/order.model');
-const { ORDER_PRODUCT_TABLE } = require('../models/order-product.model');
+const { DataTypes, Sequelize } = require("sequelize");
+const { USER_TABLE } = require("../models/user.model");
+const { CUSTOMER_TABLE } = require("../models/customer.model");
+const { CATEGORY_TABLE } = require("../models/category.model");
+const { PRODUCT_TABLE } = require("../models/product.model");
+const { ORDER_TABLE } = require("../models/order.model");
+const { ORDER_PRODUCT_TABLE } = require("../models/order-product.model");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -30,12 +29,12 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
       role: {
         allowNull: false,
         type: DataTypes.STRING,
-        defaultValue: 'customer',
+        defaultValue: "customer",
       },
     });
 
@@ -53,7 +52,7 @@ module.exports = {
       lastName: {
         allowNull: false,
         type: DataTypes.STRING,
-        field: 'last_name',
+        field: "last_name",
       },
       phone: {
         allowNull: true,
@@ -63,19 +62,19 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
       userId: {
-        field: 'user_id',
+        field: "user_id",
         unique: true,
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
           model: USER_TABLE,
-          key: 'id',
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
     });
     await queryInterface.createTable(CATEGORY_TABLE, {
@@ -98,7 +97,7 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
     });
     await queryInterface.createTable(PRODUCT_TABLE, {
@@ -128,18 +127,18 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
       categoryId: {
-        field: 'category_id',
+        field: "category_id",
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
           model: CATEGORY_TABLE,
-          key: 'id',
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     });
     await queryInterface.createTable(ORDER_TABLE, {
@@ -150,21 +149,21 @@ module.exports = {
         type: DataTypes.INTEGER,
       },
       customerId: {
-        field: 'customer_id',
+        field: "customer_id",
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
           model: CUSTOMER_TABLE,
-          key: 'id',
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
     });
     await queryInterface.createTable(ORDER_PRODUCT_TABLE, {
@@ -178,34 +177,34 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        field: 'created_at',
+        field: "created_at",
       },
       amount: {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
       orderId: {
-        field: 'order_id',
+        field: "order_id",
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
           model: ORDER_TABLE,
-          key: 'id',
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
         unique: false,
       },
       productId: {
-        field: 'product_id',
+        field: "product_id",
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
           model: PRODUCT_TABLE,
-          key: 'id',
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
         unique: false,
       },
     });

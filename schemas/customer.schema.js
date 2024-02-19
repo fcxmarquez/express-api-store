@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const id = Joi.number().integer();
 const name = Joi.string().min(3).max(30);

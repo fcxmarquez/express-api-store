@@ -1,19 +1,19 @@
-const express = require('express');
-const UserService = require('../services/user.service');
-const validatorHandler = require('../middlewares/validator.handler');
+const express = require("express");
+const passport = require("passport");
+const UserService = require("../services/user.service");
+const validatorHandler = require("../middlewares/validator.handler");
 const {
   updateUserSchema,
   createUserSchema,
   getUserSchema,
-} = require('../schemas/user.schema');
-const passport = require('passport');
+} = require("../schemas/user.schema");
 
 const router = express.Router();
 const service = new UserService();
 
 router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
+  "/",
+  passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
       const users = await service.find();
@@ -25,9 +25,9 @@ router.get(
 );
 
 router.get(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
-  validatorHandler(getUserSchema, 'params'),
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  validatorHandler(getUserSchema, "params"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -39,29 +39,25 @@ router.get(
   }
 );
 
-router.post(
-  '/',
-  validatorHandler(createUserSchema, 'body'),
-  async (req, res, next) => {
-    try {
-      const body = req.body;
-      const newUser = await service.create(body);
-      res.status(201).json(newUser);
-    } catch (error) {
-      next(error);
-    }
+router.post("/", validatorHandler(createUserSchema, "body"), async (req, res, next) => {
+  try {
+    const { body } = req;
+    const newUser = await service.create(body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.patch(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
-  validatorHandler(getUserSchema, 'params'),
-  validatorHandler(updateUserSchema, 'body'),
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  validatorHandler(getUserSchema, "params"),
+  validatorHandler(updateUserSchema, "body"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const body = req.body;
+      const { body } = req;
       const user = await service.update(id, body);
       res.json(user);
     } catch (error) {
@@ -71,9 +67,9 @@ router.patch(
 );
 
 router.delete(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
-  validatorHandler(getUserSchema, 'params'),
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  validatorHandler(getUserSchema, "params"),
   async (req, res, next) => {
     try {
       const { id } = req.params;

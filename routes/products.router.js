@@ -1,37 +1,35 @@
-const express = require('express');
-const ProductsService = require('../services/product.service');
-const validatorHandler = require('../middlewares/validator.handler');
+const express = require("express");
+const passport = require("passport");
+const ProductsService = require("../services/product.service");
+const validatorHandler = require("../middlewares/validator.handler");
 const {
   createProductSchema,
   updateProductSchema,
   getProductSchema,
   queryProductSchema,
-} = require('../schemas/product.schema');
-const passport = require('passport');
+} = require("../schemas/product.schema");
+
 const router = express.Router();
-const { checkRoles } = require('../middlewares/auth.handler');
+const { checkRoles } = require("../middlewares/auth.handler");
+
 const productService = new ProductsService();
 
 // GET
 
-router.get(
-  '/',
-  validatorHandler(queryProductSchema, 'query'),
-  async (req, res, next) => {
-    try {
-      const response = await productService.find(req);
+router.get("/", validatorHandler(queryProductSchema, "query"), async (req, res, next) => {
+  try {
+    const response = await productService.find(req);
 
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
+    res.json(response);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 // To use an error middleware, we have to use try catch
 router.get(
-  '/:productId',
-  validatorHandler(getProductSchema, 'params'),
+  "/:productId",
+  validatorHandler(getProductSchema, "params"),
   async (req, res, next) => {
     try {
       const { productId } = req.params;
@@ -44,19 +42,19 @@ router.get(
 );
 
 // All the specific routes has be before that the dynamic routes
-router.get('/filter', (req, res) => {
-  res.send('Yo soy un filter');
+router.get("/filter", (req, res) => {
+  res.send("Yo soy un filter");
 });
 
 // POST
 router.post(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles(['supplier']),
-  validatorHandler(createProductSchema, 'body'),
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles(["supplier"]),
+  validatorHandler(createProductSchema, "body"),
   async (req, res, next) => {
     try {
-      const body = req.body;
+      const { body } = req;
       const newProduct = await productService.create(body);
       res.status(201).json(newProduct);
     } catch (error) {
@@ -66,15 +64,15 @@ router.post(
 );
 
 router.put(
-  '/:productId',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles(['supplier']),
-  validatorHandler(getProductSchema, 'params'),
-  validatorHandler(createProductSchema, 'body'),
+  "/:productId",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles(["supplier"]),
+  validatorHandler(getProductSchema, "params"),
+  validatorHandler(createProductSchema, "body"),
   async (req, res, next) => {
     try {
       const { productId } = req.params;
-      const body = req.body;
+      const { body } = req;
       const product = await productService.update(productId, body);
       res.json(product);
     } catch (error) {
@@ -84,15 +82,15 @@ router.put(
 );
 
 router.patch(
-  '/:productId',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles(['supplier']),
-  validatorHandler(getProductSchema, 'params'),
-  validatorHandler(updateProductSchema, 'body'),
+  "/:productId",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles(["supplier"]),
+  validatorHandler(getProductSchema, "params"),
+  validatorHandler(updateProductSchema, "body"),
   async (req, res, next) => {
     try {
       const { productId } = req.params;
-      const body = req.body;
+      const { body } = req;
       const product = await productService.update(productId, body);
       res.json(product);
     } catch (error) {
@@ -102,10 +100,10 @@ router.patch(
 );
 
 router.delete(
-  '/:productId',
-  passport.authenticate('jwt', { session: false }),
-  checkRoles(['supplier']),
-  validatorHandler(getProductSchema, 'params'),
+  "/:productId",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles(["supplier"]),
+  validatorHandler(getProductSchema, "params"),
   async (req, res, next) => {
     try {
       const { productId } = req.params;

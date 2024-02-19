@@ -1,6 +1,6 @@
-const boom = require('@hapi/boom');
-const { Op } = require('sequelize');
-const { models } = require('../libs/sequelize');
+const boom = require("@hapi/boom");
+const { Op } = require("sequelize");
+const { models } = require("../libs/sequelize");
 
 class ProductsService {
   constructor() {}
@@ -26,14 +26,14 @@ class ProductsService {
 
     const next =
       currentPage < totalPages
-        ? `${req.protocol}://${req.get('host')}${req.baseUrl}?page=${
-            parseInt(currentPage) + 1
+        ? `${req.protocol}://${req.get("host")}${req.baseUrl}?page=${
+            parseInt(currentPage, 10) + 1
           }`
         : null;
     const prev =
       currentPage > 1
-        ? `${req.protocol}://${req.get('host')}${req.baseUrl}?page=${
-            parseInt(currentPage) - 1
+        ? `${req.protocol}://${req.get("host")}${req.baseUrl}?page=${
+            parseInt(currentPage, 10) - 1
           }`
         : null;
 
@@ -51,14 +51,14 @@ class ProductsService {
       limit,
       offset: where ? null : offset,
       where,
-      order: [['id', 'ASC']],
+      order: [["id", "ASC"]],
     });
 
     const info = {
       count: totalProducts,
       pages: totalPages,
-      next: next,
-      prev: prev,
+      next,
+      prev,
     };
 
     const response = {
@@ -73,14 +73,14 @@ class ProductsService {
 
   async findOne(productId) {
     const product = await models.Product.findByPk(productId, {
-      include: ['category'],
+      include: ["category"],
     });
 
     if (!product) {
-      throw boom.notFound('Product not found');
+      throw boom.notFound("Product not found");
     }
     if (product.isBlock) {
-      throw boom.conflict('Product is block');
+      throw boom.conflict("Product is block");
     }
     return product;
   }

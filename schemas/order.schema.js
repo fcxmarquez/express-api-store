@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const id = Joi.number().integer();
 const orderId = Joi.number().integer();

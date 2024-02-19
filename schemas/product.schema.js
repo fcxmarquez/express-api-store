@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const id = Joi.number().integer();
 const name = Joi.string().min(3).max(15);
@@ -21,10 +21,10 @@ const createProductSchema = Joi.object({
 });
 
 const updateProductSchema = Joi.object({
-  name: name,
-  price: price,
-  image: image,
-  description: description,
+  name,
+  price,
+  image,
+  description,
 });
 
 const getProductSchema = Joi.object({
@@ -33,17 +33,17 @@ const getProductSchema = Joi.object({
 
 const queryProductSchema = Joi.object({
   limit: limit.default(10),
-  page: page,
-  price: price,
-  price_min: price_min.when('price', {
+  page,
+  price,
+  price_min: price_min.when("price", {
     is: Joi.exist(),
     then: Joi.forbidden(),
-    otherwise: Joi.when('price_max', {
+    otherwise: Joi.when("price_max", {
       is: Joi.exist(),
       then: Joi.required(),
     }),
   }),
-  price_max: price_max.when('price', {
+  price_max: price_max.when("price", {
     is: Joi.exist(),
     then: Joi.forbidden(),
   }),

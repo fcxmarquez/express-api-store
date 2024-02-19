@@ -1,17 +1,18 @@
-const express = require('express');
-const passport = require('passport');
+const express = require("express");
+const passport = require("passport");
 
-const OrderService = require('../services/order.service');
+const OrderService = require("../services/order.service");
+
 const service = new OrderService();
 
 const router = express.Router();
 
 router.get(
-  '/my-orders',
-  passport.authenticate('jwt', { session: false }),
+  "/my-orders",
+  passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const user = req.user;
+      const { user } = req;
 
       if (!user.customerId) {
         res.json([]);

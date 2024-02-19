@@ -1,4 +1,4 @@
-const { models } = require('./../libs/sequelize');
+const { models } = require("../libs/sequelize");
 
 class OrderService {
   constructor() {}
@@ -18,10 +18,10 @@ class OrderService {
     const order = await models.Order.findByPk(id, {
       include: [
         {
-          association: 'customer',
-          include: ['user'],
+          association: "customer",
+          include: ["user"],
         },
-        'items',
+        "items",
       ],
     });
     return order;
@@ -34,8 +34,8 @@ class OrderService {
       },
       include: [
         {
-          association: 'customer',
-          include: ['user'],
+          association: "customer",
+          include: ["user"],
         },
       ],
     });

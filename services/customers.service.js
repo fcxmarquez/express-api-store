@@ -1,6 +1,6 @@
-const boom = require('@hapi/boom');
-const { models } = require('../libs/sequelize');
-const bcrypt = require('bcrypt');
+const boom = require("@hapi/boom");
+const bcrypt = require("bcrypt");
+const { models } = require("../libs/sequelize");
 
 class CustomerService {
   constructor() {}
@@ -15,7 +15,7 @@ class CustomerService {
       },
     };
     const newCustomer = await models.Customer.create(newData, {
-      include: ['user'],
+      include: ["user"],
     });
 
     delete newCustomer.dataValues.user.dataValues.password;
@@ -27,8 +27,8 @@ class CustomerService {
       include: [
         {
           model: models.User,
-          as: 'user',
-          attributes: { exclude: ['password'] },
+          as: "user",
+          attributes: { exclude: ["password"] },
         },
       ],
     });
@@ -40,13 +40,13 @@ class CustomerService {
       include: [
         {
           model: models.User,
-          as: 'user',
-          attributes: { exclude: ['password'] },
+          as: "user",
+          attributes: { exclude: ["password"] },
         },
       ],
     });
     if (!customer) {
-      throw boom.notFound('Customer not found');
+      throw boom.notFound("Customer not found");
     }
     return customer;
   }
