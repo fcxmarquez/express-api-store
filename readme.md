@@ -12,6 +12,7 @@ This is a backend api project for a simple e-commerce application. It pretends t
 - Authentication and strategies management with JWT
 - Using schemas for validation and middleware for error handling and other purposes
 - User roles and permissions
+- Sending of emails with nodemailer
 - Services:
   - User
   - Product
