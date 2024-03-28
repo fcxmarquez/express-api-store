@@ -18,3 +18,4 @@ This is a backend api project for a simple e-commerce application. It pretends t
   - Product
   - Order
   - Auth
+  - Email
