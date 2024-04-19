@@ -28,7 +28,6 @@ class UserService {
       where: { email },
       include: ["customer"],
     });
-
     return response;
   }
 
