@@ -19,3 +19,10 @@ This is a backend api project for a simple e-commerce application. It pretends t
   - Order
   - Auth
   - Email
+
+## First Setup
+* Run `npm install` to install the dependencies
+* Run `docker compose up -d` to start the postgres database
+* Run `npm run migrations:run` to migrate the database
+* Set the environment variables in the `.env` file
+* Run `npm run dev` to start the server
