@@ -25,26 +25,26 @@ services:
     ports:
       - 5050:80
 
-  mysql:
-    image: mysql:5
-    env_file:
-      - .env
-    environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_PORT=${MYSQL_PORT}
-    ports:
-      - 3306:3306
-    volumes:
-      - ./mysql_data:/var/lib/mysql
+  # mysql:
+  #   image: mysql:5
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - MYSQL_DATABASE=${DB_NAME}
+  #     - MYSQL_USER=${MYSQL_USER}
+  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+  #     - MYSQL_PORT=${MYSQL_PORT}
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - ./mysql_data:/var/lib/mysql
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    env_file:
-      - .env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - PMA_HOST=mysql
-    ports:
-      - 8080:80
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+  #     - PMA_HOST=mysql
+  #   ports:
+  #     - 8080:80

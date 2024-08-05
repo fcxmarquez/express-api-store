@@ -39,25 +39,33 @@ class AuthService {
     const user = await service.findByEmail(email);
     if (!user) throw boom.unauthorized();
 
+    // Create a test account
+    const testAccount = await nodemailer.createTestAccount();
+
+    // Create a transporter using the test account
     const transporter = nodemailer.createTransport({
-      host: "smtp.mandrillapp.com",
+      host: "smtp.ethereal.email",
       port: 587,
-      secure: false, // Use `true` for port 465, `false` for all other ports
+      secure: false,
       auth: {
-        user: "not-defined",
-        pass: config.smtpEmailPass,
+        user: testAccount.user,
+        pass: testAccount.pass,
       },
     });
 
-    await transporter.sendMail({
-      from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
+    // Send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: `"Your Name" <${testAccount.user}>`, // sender address
       to: email, // list of receivers
       subject: "Recovery Email", // Subject line
       text: "Recovery Email", // plain text body
-      html: "<b>Recovery Email</b>", // html body
+      html: "<b>Recovery Email Test</b>", // html body
     });
 
-    return { message: "Email sent" };
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+    return { message: "Email sent", previewUrl: nodemailer.getTestMessageUrl(info) };
   }
 }
 
