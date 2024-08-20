@@ -1,14 +1,16 @@
 const boom = require("@hapi/boom");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const UserService = require("./user.service");
 const { config } = require("../config/config");
 
 const service = new UserService();
 
 class AuthService {
-  constructor() {}
+  constructor() {
+    this.resend = new Resend(config.resendApiKey);
+  }
 
   async getUser(email, password) {
     const user = await service.findByEmail(email);
@@ -39,33 +41,17 @@ class AuthService {
     const user = await service.findByEmail(email);
     if (!user) throw boom.unauthorized();
 
-    // Create a test account
-    const testAccount = await nodemailer.createTestAccount();
-
-    // Create a transporter using the test account
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
+    const { data, error } = await this.resend.emails.send({
+      from: "Your App <onboarding@resend.dev>",
+      to: email,
+      subject: "Recovery Email",
+      html: "<b>Recovery Email Test</b>",
     });
 
-    // Send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: `"Your Name" <${testAccount.user}>`, // sender address
-      to: email, // list of receivers
-      subject: "Recovery Email", // Subject line
-      text: "Recovery Email", // plain text body
-      html: "<b>Recovery Email Test</b>", // html body
-    });
+    if (error) throw boom.internal("Error sending email");
 
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
-    return { message: "Email sent", previewUrl: nodemailer.getTestMessageUrl(info) };
+    console.log("Email sent:", data);
+    return { message: "Email sent", id: data.id };
   }
 }
 
