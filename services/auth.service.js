@@ -32,9 +32,31 @@ class AuthService {
       role: user.role,
       customerId: user.customer ? user.customer.id : null,
     };
-    const token = jwt.sign(payload, config.jwtRecoverySecret);
+    const token = jwt.sign(payload, config.jwtSecret);
 
     return { payload, token };
+  }
+
+  async forgetPassword(token, newPassword) {
+    try {
+      const { sub } = jwt.verify(token, config.jwtRecoverySecret);
+      const user = await service.findOne(sub);
+      if (!user) throw boom.unauthorized();
+      if (!user.recoveryToken || user.recoveryToken !== token) throw boom.unauthorized();
+
+      const hash = await bcrypt.hash(newPassword, 10);
+      await service.update(user.id, { password: hash, recoveryToken: null });
+
+      return { message: "Password changed" };
+    } catch (error) {
+      if (
+        error instanceof jwt.JsonWebTokenError ||
+        error instanceof jwt.TokenExpiredError
+      ) {
+        throw boom.unauthorized();
+      }
+      throw error;
+    }
   }
 
   async sendRecoveryEmail(email) {
@@ -42,7 +64,9 @@ class AuthService {
     if (!user) throw boom.unauthorized();
 
     const payload = { sub: user.id };
-    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: "15min" });
+    const token = jwt.sign(payload, config.jwtRecoverySecret, {
+      expiresIn: "15min",
+    });
     const link = `http://myfrontend.com/recovery?token=${token}`;
     // The flow of the recovery is:
     // 1. User fill the form with the email and the new password
