@@ -13,4 +13,9 @@ const recoverySchema = Joi.object({
   email,
 });
 
-module.exports = { forgetPasswordSchema, recoverySchema };
+const loginSchema = Joi.object({
+  email: email.required(),
+  password: password.required(),
+});
+
+module.exports = { forgetPasswordSchema, recoverySchema, loginSchema };

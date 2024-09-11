@@ -1,7 +1,11 @@
 const express = require("express");
 const passport = require("passport");
 const AuthService = require("../services/auth.service");
-const { forgetPasswordSchema, recoverySchema } = require("../schemas/auth.schema");
+const {
+  forgetPasswordSchema,
+  recoverySchema,
+  loginSchema,
+} = require("../schemas/auth.schema");
 const validatorHandler = require("../middlewares/validator.handler");
 
 const router = express.Router();
@@ -10,6 +14,7 @@ const authService = new AuthService();
 
 router.post(
   "/login",
+  validatorHandler(loginSchema, "body"),
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
     try {
