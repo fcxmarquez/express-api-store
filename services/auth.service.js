@@ -60,32 +60,34 @@ class AuthService {
   }
 
   async sendRecoveryEmail(email) {
-    const user = await service.findByEmail(email);
-    if (!user) throw boom.unauthorized();
+    const errorMessage = "If the email exists, a recovery email will be sent";
+    try {
+      const user = await service.findByEmail(email);
 
-    const payload = { sub: user.id };
-    const token = jwt.sign(payload, config.jwtRecoverySecret, {
-      expiresIn: "15min",
-    });
-    const link = `http://myfrontend.com/recovery?token=${token}`;
-    // The flow of the recovery is:
-    // 1. User fill the form with the email and the new password
-    // 2. User click the link and the frontend send the new password and the token to the backend
-    // 3. The backend receive the new password and the token, the backend check if the token is valid
-    // 4. If the token is valid, the backend update the password
+      const payload = { sub: user.id };
+      const token = jwt.sign(payload, config.jwtRecoverySecret, {
+        expiresIn: "15min",
+      });
+      const link = `http://myfrontend.com/recovery?token=${token}`;
+      // The flow of the recovery is:
+      // 1. User fill the form with the email and the new password
+      // 2. User click the link and the frontend send the new password and the token to the backend
+      // 3. The backend receive the new password and the token, the backend check if the token is valid
+      // 4. If the token is valid, the backend update the password
 
-    await service.update(user.id, { recoveryToken: token });
+      await service.update(user.id, { recoveryToken: token });
 
-    const { data, error } = await this.resend.emails.send({
-      from: "Your App <onboarding@resend.dev>",
-      to: email,
-      subject: "Recovery user email",
-      html: `<b>Go to this link to recovery your password: ${link}</b>`,
-    });
+      await this.resend.emails.send({
+        from: "Your App <onboarding@resend.dev>",
+        to: email,
+        subject: "Recovery user email",
+        html: `<b>Go to this link to recovery your password: ${link}</b>`,
+      });
 
-    if (error) throw boom.internal("Error sending email");
-
-    return { message: "Password email sent", id: data.id };
+      return { message: errorMessage };
+    } catch (error) {
+      return { message: errorMessage };
+    }
   }
 
   async sendEmail(infoMail) {
