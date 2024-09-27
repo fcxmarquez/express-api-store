@@ -7,6 +7,7 @@ const {
   updateCustomerSchema,
   getCustomerSchema,
 } = require("../schemas/customer.schema");
+const limiter = require("../middlewares/rateLimit.handler");
 
 const router = express.Router();
 const service = new CustomerService();
@@ -14,6 +15,7 @@ const service = new CustomerService();
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
+  limiter,
   async (req, res, next) => {
     try {
       const customers = await service.find();

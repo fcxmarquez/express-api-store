@@ -7,6 +7,7 @@ const {
   loginSchema,
 } = require("../schemas/auth.schema");
 const validatorHandler = require("../middlewares/validator.handler");
+const limiter = require("../middlewares/rateLimit.handler");
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.post(
 router.post(
   "/recovery",
   validatorHandler(recoverySchema, "body"),
+  limiter,
   async (req, res, next) => {
     try {
       const { email } = req.body;
